@@ -1,0 +1,10 @@
+parameters:
+
+  tinymce.class:               dmTinyMce  
+  
+services:
+
+  tinymce:
+    class:                      %tinymce.class%
+    shared:                     true
+    arguments:                  [@helper]  

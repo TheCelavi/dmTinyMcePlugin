@@ -1,0 +1,5 @@
+dmWidgetContent:
+
+  tinyMce:
+    name:               "HTML content"
+    cache:              true
