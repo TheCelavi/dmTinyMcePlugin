@@ -9,44 +9,60 @@
   // onload
   $(function()
   {
-    dmTinyMceInit();
+    dmTinyMceInit(null, false);
   });
   
 })(jQuery);
-
-
-
  
  
 $.fn.dmWidgetContentTinyMceForm = function(widget)
 {
 	this.parent().parent().css('width', '510px');
-	dmTinyMceInit(widget);
+	dmTinyMceInit(widget, true);
 };
 
  
-function dmTinyMceInit(subject)
+function dmTinyMceInit(subject, is_widget)
 {
 
 	jQuery.each(jQuery.find('div.dm_tinymce_json'), function(index, json_element) { 
 
 	  data = jQuery.parseJSON(jQuery(json_element).html());
-	  jQuery(json_element).remove();
-		
+	  
 		var editor_parent_id = data.tinymce_element+'_parent';
 		
 	  data.tinymce_config.oninit = function()
 	  {
-
 	  	dmTinyMceInitMedia($('#'+editor_parent_id));
 	  }
 	  
 	  tinyMCE.init(data.tinymce_config);
-	  
+	
+	  jQuery(json_element).remove();
+		  
+		if(is_widget)
+		{
+			dmTinyMceWidgetFormMonitor(data);
+		}
+
 	});
 
 };
 
+
+function dmTinyMceWidgetFormMonitor(data)
+{
+	$('#'+data.tinymce_element).closest("form").submit(function() {
+	  
+	  // Fix for issue #1
+	  var input = $(this).find("textarea");
+	  var editor = tinyMCE.get(input.attr('id'));
+	  input.val(editor.getContent());
+	  
+	  return true;
+	});
+
+};
 
  
 function dmTinyMceInitMedia(element)
@@ -95,11 +111,10 @@ function dmTinyMceCreateOverlay(element, link)
     $.ajax({
       url: link + $(this).val().split(' ')[0].split(':')['1'],
       success: function(src) {
-        
-        //var editor.setData(src + editor.getData());
+ 
         var editor = tinyMCE.get(element.attr('id').substr(0, element.attr('id').length-7));
         editor.execCommand('mceInsertContent', false, src)
-        //--alert( src + " |>>>| " + editor );
+
       }
     });
   });
