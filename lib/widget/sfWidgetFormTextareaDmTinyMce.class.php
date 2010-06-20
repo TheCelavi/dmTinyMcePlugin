@@ -56,6 +56,12 @@ class sfWidgetFormTextareaDmTinyMce extends sfWidgetFormTextarea
 		{
 			$config['height'] = sprintf('width:"%spx",', $this->getOption('height'));
 		}
+
+		if(isset($config['content_css']))
+		{
+			sfContext::getInstance()->getConfiguration()->loadHelpers('Url');
+			$config['content_css'] = public_path($config['content_css']);
+		}
 		
 		$config['mode'] = "exact";
 		$config['elements'] = $this->generateId($name);
