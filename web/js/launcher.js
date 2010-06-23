@@ -11,64 +11,91 @@
   {
     dmTinyMceInit(null, false);
   });
-  
+
 })(jQuery);
- 
- 
+
+
 $.fn.dmWidgetContentTinyMceForm = function(widget)
 {
-	this.parent().parent().css('width', '510px');
-	dmTinyMceInit(widget, true);
+  this.parent().parent().css('width', '510px');
+  dmTinyMceInit(widget, true);
 };
 
- 
+
 function dmTinyMceInit(subject, is_widget)
 {
 
-	jQuery.each(jQuery.find('div.dm_tinymce_json'), function(index, json_element) { 
+  jQuery.each(jQuery.find('div.dm_tinymce_json'), function(index, json_element) {
 
-	  data = jQuery.parseJSON(jQuery(json_element).html());
-	  
-		var editor_parent_id = data.tinymce_element+'_parent';
-		
-	  data.tinymce_config.oninit = function()
-	  {
-	  	dmTinyMceInitMedia($('#'+editor_parent_id));
-	  }
-	  
-	  tinyMCE.init(data.tinymce_config);
-	
-	  jQuery(json_element).remove();
-		  
-		if(is_widget)
-		{
-			dmTinyMceWidgetFormMonitor(data);
-		}
+    var data = jQuery.parseJSON(jQuery(json_element).html());
 
-	});
+    if(typeof tinyMCE == "undefined")
+    {
+      window.tinyMCEPreInit = {base: data.tinymce_base, suffix : '', query : ''};
+
+      $.ajax({
+        type: "GET",
+        url: data.tinymce_path,
+        dataType: "script",
+        cache: true,
+        async: false,
+        success: function(){
+          tinymce.dom.Event.domLoaded = true;
+          dmTinyMceInitEditor(data);
+        }
+      });
+
+    }
+    else
+    {
+      dmTinyMceInitEditor(data);
+    }
+
+    jQuery(json_element).remove();
+
+    if(is_widget)
+    {
+      dmTinyMceWidgetFormMonitor(data);
+    }
+
+  });
+
+};
+
+function dmTinyMceInitEditor(data)
+{
+
+  var editor_parent_id = data.tinymce_element+'_parent';
+
+  data.tinymce_config.oninit = function()
+  {
+    dmTinyMceInitMedia($('#'+editor_parent_id));
+  }
+
+  tinyMCE.init(data.tinymce_config);
 
 };
 
 
 function dmTinyMceWidgetFormMonitor(data)
 {
-	$('#'+data.tinymce_element).closest("form").submit(function() {
-	  
-	  // Fix for issue #1
-	  var input = $(this).find("textarea");
-	  var editor = tinyMCE.get(input.attr('id'));
-	  input.val(editor.getContent());
-	  
-	  return true;
-	});
+  $('#'+data.tinymce_element).closest("form").submit(function() {
+
+    // Fix for issue #1
+    var input = $(this).find("textarea");
+    var editor = tinyMCE.get(input.attr('id'));
+    input.val(editor.getContent());
+
+    return true;
+  });
 
 };
 
- 
+
 function dmTinyMceInitMedia(element)
 {
 
-	var overlay_id = '';
+  var overlay_id = '';
 
   $('#dm_page_tree a.ui-draggable').live('dragstart', function(event, ui){
     overlay_id = dmTinyMceCreateOverlay(element, $.dm.ctrl.getHref('+/dmCkEditor/page/id/'));
@@ -77,7 +104,7 @@ function dmTinyMceInitMedia(element)
   $('#dm_page_tree a.ui-draggable').live('dragstop', function(event, ui) {
     $('#' + overlay_id).remove();
   });
-  
+
   $('#dm_media_browser li.image.ui-draggable').live('dragstart', function(event, ui) {
     overlay_id = dmTinyMceCreateOverlay(element, $.dm.ctrl.getHref('+/dmCkEditor/media/id/'));
   });
@@ -111,7 +138,7 @@ function dmTinyMceCreateOverlay(element, link)
     $.ajax({
       url: link + $(this).val().split(' ')[0].split(':')['1'],
       success: function(src) {
- 
+
         var editor = tinyMCE.get(element.attr('id').substr(0, element.attr('id').length-7));
         editor.execCommand('mceInsertContent', false, src)
 

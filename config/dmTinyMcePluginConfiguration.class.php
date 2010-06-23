@@ -19,17 +19,9 @@ class dmTinyMcePluginConfiguration extends sfPluginConfiguration
     if ($this->configuration instanceof dmAdminApplicationConfiguration)
     {
       $e->getSubject()->getResponse()
-      ->addStylesheet('/dmTinyMcePlugin/css/admin.css');
+        ->addStylesheet('/dmTinyMcePlugin/css/admin.css');
     }
     
-    $e->getSubject()->getResponse()
-     ->addJavascript(sfConfig::get('dm_tinymce_path'))
-     ->addJavascript('/dmTinyMcePlugin/js/launcher.js');
-       
-    /*
-     * Add tiny_mce.js and launcher.js to javascript compressor black list
-     */
-    $e->getSubject()->get('javascript_compressor')->addToBlackList(array('tiny_mce.js', 'launcher.js'));
   }
   
   public function listenToFormGeneratorWidgetSubclassEvent(sfEvent $e, $subclass)

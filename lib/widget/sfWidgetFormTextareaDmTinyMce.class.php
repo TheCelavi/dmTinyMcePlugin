@@ -43,6 +43,8 @@ class sfWidgetFormTextareaDmTinyMce extends sfWidgetFormTextarea
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
+  	sfContext::getInstance()->getConfiguration()->loadHelpers('Url');
+  	
     $textarea = parent::render($name, $value, $attributes, $errors);
 		
 		$config = $this->getOption('config');
@@ -59,7 +61,6 @@ class sfWidgetFormTextareaDmTinyMce extends sfWidgetFormTextarea
 
 		if(isset($config['content_css']))
 		{
-			sfContext::getInstance()->getConfiguration()->loadHelpers('Url');
 			$config['content_css'] = public_path($config['content_css']);
 		}
 		
@@ -69,10 +70,18 @@ class sfWidgetFormTextareaDmTinyMce extends sfWidgetFormTextarea
     $data = array(
     	"tinymce_element" => $config['elements'],
     	"tinymce_config" => $config,
+    	"tinymce_path" => public_path(sfConfig::get('dm_tinymce_path')),
     );
-    $json = "<div class=\"dm_tinymce_json none\">".json_encode($data)."</div>\n";
+    $data["tinymce_base"] = dirname($data["tinymce_path"])."/";
+
+    $json = "<div class=\"dm_tinymce_json none\">".json_encode($data)."</div>";
 
     return $textarea.$json;
   }
   
+	public function getJavaScripts()
+	{
+	  return array('/dmTinyMcePlugin/js/launcher.js');
+	}
+
 }
