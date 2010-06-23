@@ -1,18 +1,10 @@
-(function($)
-{
-  ////front
-  //$('#dm_page div.dm_widget').bind('dmWidgetLaunch', function()
-  //{
-  //
-  //});
 
-  // onload
-  $(function()
+$(document).ready(function() {
+  if($("#dm_admin_content").length)
   {
-    dmTinyMceInit(null, false);
-  });
-
-})(jQuery);
+  	dmTinyMceInit(null, false);
+  }  
+});
 
 
 $.fn.dmWidgetContentTinyMceForm = function(widget)
@@ -52,7 +44,7 @@ function dmTinyMceInit(subject, is_widget)
     }
 
     jQuery(json_element).remove();
-
+    	
     if(is_widget)
     {
       dmTinyMceWidgetFormMonitor(data);
@@ -79,6 +71,7 @@ function dmTinyMceInitEditor(data)
 
 function dmTinyMceWidgetFormMonitor(data)
 {
+
   $('#'+data.tinymce_element).closest("form").submit(function() {
 
     // Fix for issue #1
