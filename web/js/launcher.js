@@ -76,7 +76,7 @@ function dmTinyMceWidgetFormMonitor(data)
 
     // Fix for issue #1
     var input = $(this).find("textarea");
-    var editor = tinyMCE.get(input.attr('id'));
+    var editor = tinyMCE.get(input.prop('id'));
     input.val(editor.getContent());
 
     return true;
@@ -91,7 +91,7 @@ function dmTinyMceInitMedia(element)
   var overlay_id = '';
 
   $('#dm_page_tree a.ui-draggable').live('dragstart', function(event, ui){
-    overlay_id = dmTinyMceCreateOverlay(element, $.dm.ctrl.getHref('+/dmCkEditor/page/id/'));
+    overlay_id = dmTinyMceCreateOverlay(element, $.dm.ctrl.getHref('+/dmTinyMce/page/id/'));
   });
 
   $('#dm_page_tree a.ui-draggable').live('dragstop', function(event, ui) {
@@ -99,7 +99,7 @@ function dmTinyMceInitMedia(element)
   });
 
   $('#dm_media_browser li.image.ui-draggable').live('dragstart', function(event, ui) {
-    overlay_id = dmTinyMceCreateOverlay(element, $.dm.ctrl.getHref('+/dmCkEditor/media/id/'));
+    overlay_id = dmTinyMceCreateOverlay(element, $.dm.ctrl.getHref('+/dmTinyMce/media/id/'));
   });
 
   $('#dm_media_browser li.image.ui-draggable').live('dragstop', function(event, ui) {
@@ -112,8 +112,9 @@ function dmTinyMceInitMedia(element)
 
 function dmTinyMceCreateOverlay(element, link)
 {
-  var overlay_id = 'drag_box_' + element.attr('id');
-
+ 
+  var overlay_id = 'drag_box_' + element.prop('id');
+  
   var offset = element.offset();
   $(document.body).append('<div id="'+overlay_id+'"><input style="width: 100%; height: 100%;" /></div>');
 
@@ -125,16 +126,14 @@ function dmTinyMceCreateOverlay(element, link)
     width: element.width() + 'px',
     backgroundColor: 'white',
     opacity: 0.5,
-    zIndex: 1000,
+    zIndex: $.maxZIndex({inc:5}),
     display: 'block'
   }).find('input:first').dmDroppableInput(function() {
     $.ajax({
       url: link + $(this).val().split(' ')[0].split(':')['1'],
       success: function(src) {
-
-        var editor = tinyMCE.get(element.attr('id').substr(0, element.attr('id').length-7));
+        var editor = tinyMCE.get(element.prop('id').substr(0, element.prop('id').length-7));
         editor.execCommand('mceInsertContent', false, src)
-
       }
     });
   });

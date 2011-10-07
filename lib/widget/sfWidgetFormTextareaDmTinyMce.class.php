@@ -81,7 +81,10 @@ class sfWidgetFormTextareaDmTinyMce extends sfWidgetFormTextarea
   
 	public function getJavaScripts()
 	{
-	  return array('/dmTinyMcePlugin/js/launcher.js');
+	  return array(
+              '/dmCorePlugin/lib/maxzindex/jquery.maxzindex.js',
+              '/dmTinyMcePlugin/js/launcher.js'
+              );
 	}
 
 }

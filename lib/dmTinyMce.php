@@ -26,13 +26,13 @@ class dmTinyMce
     $html = str_get_html($data);
     foreach ($html->find('img') as $image) 
     {
-      $this->updateImage($image);
+      $image = $this->updateImage($image);      
     }
     
     foreach ($html->find('a.link') as $page) 
     {
-      $this->updatePage($page);
-    }
+      $page = $this->updatePage($page);
+    }    
     return $html;
   }
 
@@ -45,15 +45,15 @@ class dmTinyMce
     
     $id = str_replace('dmPage-','',$page->id);
     if (!$id || !is_numeric($id))
-    {
-      return;
+    {        
+      return $page;
     }
       
     $pageRecord = dmDb::table('DmPage')->findOneByIdWithI18n($id);
     
     if (!$pageRecord)
     {
-      return;
+      return $page;
     }
       
     $url = $this->helper->link($pageRecord)->getHref();
@@ -62,6 +62,7 @@ class dmTinyMce
     {
       $page->href = $url;
     }
+    return $page;
   }
   
   /**
@@ -71,18 +72,19 @@ class dmTinyMce
    */
   protected function updateImage($image) 
   {
-    $id = str_replace('ck-media-','',$image->id);
+    $id = str_replace('dmMedia-','',$image->id);
 
     if (!$id || !is_numeric($id))
     {
-      return;
+      return $image;
     }
     
     $mediaRecord = dmDb::table('dmMedia')->findOneByIdWithFolder($id);
 
     if (!$mediaRecord)
     {
-      return;
+        
+      return $image;
     }
     
     $src = $this->helper->media($mediaRecord)->getSrc();
@@ -91,5 +93,6 @@ class dmTinyMce
     {
       $image->src = $src;
     }
+    return $image;
   }
 }
