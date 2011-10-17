@@ -71,8 +71,9 @@ function dmTinyMceInitEditor(data)
 
 function dmTinyMceWidgetFormMonitor(data)
 {
-
-  $('#'+data.tinymce_element).closest("form").submit(function() {
+    
+  var $tinyMce = $('#'+data.tinymce_element);
+  $tinyMce.closest("form").submit(function() {
 
     // Fix for issue #1
     var input = $(this).find("textarea");
@@ -81,7 +82,6 @@ function dmTinyMceWidgetFormMonitor(data)
 
     return true;
   });
-
 };
 
 

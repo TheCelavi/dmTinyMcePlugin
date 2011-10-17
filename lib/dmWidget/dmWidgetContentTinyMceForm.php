@@ -1,29 +1,42 @@
 <?php
 
-class dmWidgetContentTinyMceForm extends dmWidgetPluginForm
-{
+class dmWidgetContentTinyMceForm extends dmWidgetPluginForm {
 
-  public function configure()
-  {
-    parent::configure();
+    public function configure() {
+        parent::configure();
+        $this->widgetSchema['html'] = new sfWidgetFormTextareaDmTinyMce();
+        $this->validatorSchema['html'] = new sfValidatorString();
+    }
 
-    $this->widgetSchema['html'] = new sfWidgetFormTextareaDmTinyMce();
-    
-    $this->validatorSchema['html'] = new sfValidatorString();
-  }
+    protected function renderContent($attributes) {
+        $formRenderer = new dmFrontFormRenderer(array(
+                    new dmFrontFormSection(
+                            array(
+                                array('name' => 'html', 'is_big' => true, 'label' => false)
+                            ),
+                            'Basic'
+                    ),
+                    new dmFrontFormSection(
+                            array(
+                                array('name' => 'behaviors', 'is_big' => true),
+                                array('name' => 'cssClass', 'is_big' => true)
+                            ),
+                            'Advanced'
+                    )
+                        ), $this);
+        return $formRenderer->render();
+    }
 
-  protected function renderContent($attributes)
-  {
-    
-    $tinyMce = new dmTinyMce(dmContext::getInstance()->getHelper());
-    $val = $tinyMce->render($this['html']->getValue());  
-    
-    $this->widgetSchema['html'] = new sfWidgetFormTextareaDmTinyMce();
-    $this->setDefault('html', $val);
-    
-    return $this->getHelper()->tag('ul.dm_form_elements',
-      $this->getHelper()->tag('li.dm_form_element.clearfix', $this['html']->field()->error()).
-      $this['cssClass']->renderRow()
-    );
-  }
+    public function getStylesheets() {
+        return array_merge(
+                        parent::getStylesheets(), dmFrontFormRenderer::getStylesheets(), array()
+        );
+    }
+
+    public function getJavaScripts() {
+        return array_merge(
+                        parent::getJavaScripts(), dmFrontFormRenderer::getJavascripts(), array()
+        );
+    }
+
 }
