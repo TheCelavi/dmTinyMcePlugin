@@ -9,14 +9,14 @@ class dmWidgetContentTinyMceForm extends dmWidgetPluginForm {
     }
 
     protected function renderContent($attributes) {
-        $formRenderer = new dmFrontFormRenderer(array(
-                    new dmFrontFormSection(
+        $formRenderer = new dmDialogFormRenderer(array(
+                    new dmDialogFormSection(
                             array(
                                 array('name' => 'html', 'is_big' => true, 'label' => false)
                             ),
                             'Basic'
                     ),
-                    new dmFrontFormSection(
+                    new dmDialogFormSection(
                             array(
                                 array('name' => 'behaviors', 'is_big' => true),
                                 array('name' => 'cssClass', 'is_big' => true)
@@ -29,13 +29,13 @@ class dmWidgetContentTinyMceForm extends dmWidgetPluginForm {
 
     public function getStylesheets() {
         return array_merge(
-                        parent::getStylesheets(), dmFrontFormRenderer::getStylesheets(), array()
+                        parent::getStylesheets(), dmDialogFormRenderer::getStylesheets(), array()
         );
     }
 
     public function getJavaScripts() {
         return array_merge(
-                        parent::getJavaScripts(), dmFrontFormRenderer::getJavascripts(), array()
+                        parent::getJavaScripts(), dmDialogFormRenderer::getJavascripts(), array()
         );
     }
 
