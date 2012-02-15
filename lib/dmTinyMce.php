@@ -77,7 +77,7 @@ class dmTinyMce {
         if (isset($image->width))
             $media->width($image->width);
         if (isset($image->height))
-            $media->width($image->height);
+            $media->height($image->height);
         $src = $media->getSrc();
 
         if ($image->src != $src) {
