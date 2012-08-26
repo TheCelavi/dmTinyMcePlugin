@@ -25,8 +25,6 @@ class dmWidgetContentTinyMceView extends dmWidgetPluginView
 
   public function doRenderForIndex()
   {
-    $vars = $this->getViewVars();
-    $tinyMce = new dmTinyMce($this->getHelper());
-    return strip_tags($tinyMce->render($vars['html']));
+    return strip_tags($this->compiledVars['html']);   
   }
 }
